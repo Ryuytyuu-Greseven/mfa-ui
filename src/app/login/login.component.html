@@ -1,0 +1,23 @@
+<div class="adjust-centre" *ngIf="viewType === 1">
+    <form [formGroup]="userDetailsForm">
+        <div class="input-field">
+            <label>User Name</label>
+            <input type="text" formControlName="username">
+        </div>
+        <div class="input-field">
+            <label>Password</label>
+            <input type="text" formControlName="password">
+        </div>
+
+        <button class="input-field" (click)="onUserLogin()">Login</button>
+    </form>
+</div>
+
+<div class="adjust-centre" *ngIf="viewType === 2">
+    <form [formGroup]="mfaDetailForm">
+        <div class="input-field">
+            <label>Entre the Code</label>
+            <input type="text" formControlName="mfacode">
+        </div>
+    </form>
+</div>
