@@ -14,10 +14,23 @@
 </div>
 
 <div class="adjust-centre" *ngIf="viewType === 2">
+    <img [src]="imageDataSrc" *ngIf="imageDataSrc?.length">
     <form [formGroup]="mfaDetailForm">
         <div class="input-field">
-            <label>Entre the Code</label>
+            <label>Enter the Code</label>
             <input type="text" formControlName="mfacode">
         </div>
+        <button class="input-field" (click)="backToLogin()">Back</button>
+        <button class="input-field" (click)="onVerifyUser()">Verify</button>
     </form>
+</div>
+
+<div class="adjust-centre" *ngIf="viewType === 3">
+    <h3>Unable to Process the Authentication</h3>
+    <button class="input-field" (click)="backToLogin()">Retry</button>
+</div>
+
+<div class="adjust-centre" *ngIf="viewType === 4">
+    <h3>Authentication is Successfully</h3>
+    <button class="input-field" (click)="backToLogin()">Demo Again</button>
 </div>

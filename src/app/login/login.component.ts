@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private commonService: CommonService) { }
 
   // forms
   userDetailsForm !: FormGroup;
@@ -16,6 +17,9 @@ export class LoginComponent {
 
   // form views
   viewType = 1;
+
+  // qrcode
+  imageDataSrc = '';
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -32,8 +36,56 @@ export class LoginComponent {
 
   onUserLogin() {
     console.log(this.userDetailsForm);
+    this.imageDataSrc = '';
     if (this.userDetailsForm.valid) {
-      this.viewType = 2;
+
+      const body = {
+        username: this.userDetailsForm.value.username,
+        password: this.userDetailsForm.value.password
+      };
+
+      this.commonService.loginUser(body).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          if (response.imageSrc) {
+            this.imageDataSrc = response.imageSrc;
+            this.viewType = 2;
+          } else {
+            this.viewType = 2;
+          }
+        }, error: (error: any) => {
+          console.log(error);
+          this.viewType = 2;
+        }
+      });
     }
+  }
+
+  onVerifyUser() {
+    console.log(this.mfaDetailForm);
+
+    if (this.mfaDetailForm.valid) {
+      const body = {
+        username : this.userDetailsForm.value.username,
+        userToken: this.mfaDetailForm.value.mfacode
+      };
+
+      this.commonService.verifyUser(body).subscribe({
+        next: (response: any) => {
+          console.log(response);
+          if (response.status) {
+            this.viewType = 4;
+          } else {
+            this.viewType = 3;
+          }
+        }, error: (error: any) => {
+          console.log(error);
+        }
+      });
+    }
+  }
+
+  backToLogin() {
+    this.viewType = 1;
   }
 }
